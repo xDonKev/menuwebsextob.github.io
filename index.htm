@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frutalia - Menú Digital de Cocteles</title>
+    <style>
+        /* --- VARIABLES DE DISEÑO (Predomina el Morado) --- */
+        :root {
+            --primary: #6b21a8; /* Morado principal */
+            --primary-light: #a855f7; /* Morado claro para efectos */
+            --primary-dark: #4c1d95; /* Morado oscuro */
+            --accent: #f59e0b; /* Toque dorado/naranja para contraste frutado */
+            --bg-dark: #0f172a; /* Fondo oscuro moderno */
+            --card-bg: rgba(255, 255, 255, 0.05); /* Tarjetas translúcidas (Glassmorphism) */
+            --text-light: #f8fafc;
+            --text-muted: #cbd5e1;
+        }
+
+        /* --- ESTILOS GENERALES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- ENCABEZADO / HERO SECTION --- */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* --- MENÚ / CONTENEDOR DE PRODUCTOS --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        /* Estilo base de cada tarjeta de producto con interactividad */
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Efecto interactivo al pasar el mouse por la tarjeta */
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.2);
+        }
+
+        .product-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 220px;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        /* Efecto de zoom en la imagen al hacer hover */
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .product-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        /* Botón interactivo de compra */
+        .btn-buy {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-buy:hover {
+            box-shadow: 0 0 15px var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        /* --- SECCIÓN DE PAGO (CAJA BANCARIA Y QR) --- */
+        .checkout-section {
+            background: rgba(107, 33, 168, 0.1);
+            border-top: 2px solid var(--primary);
+            padding: 4rem 1rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .checkout-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid var(--primary-light);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .checkout-container h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        /* Notificación dinámica que cambia con la selección */
+        .selection-alert {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px dashed var(--accent);
+            color: var(--accent);
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .bank-details {
+            background: rgba(255,255,255,0.05);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .bank-details p {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .bank-details strong {
+            color: var(--primary-light);
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 1.5rem auto;
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .checkout-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- RESPONSIVIDAD (Diseño Adaptable Móvil) --- */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr; /* Una sola columna en celulares para mejor lectura */
+                gap: 1.5rem;
+            }
+            .checkout-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>frutilan D M</h1>
+        <p>Disfruta de la frescura tropical con el toque premium de nuestro Gelatto</p>
+    </header>
+
+    <div class="container">
+        
+        <main class="menu-grid">
+
+            <article class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://lachechicocina.com/wp-content/uploads/2025/01/batido-de-naranja-y-zanahoria-una-deliciosa-y-nutritiva-bebida-para-mejorar-tu-salud-1024x574.jpg" alt="Sol de Liceo">
+                </div>
+                <div class="product-info">
+                    <div>
+                        <h3 class="product-title">Sol de Liceo</h3>
+                        <p class="product-desc">Refrescante coctel de naranja y extracto puro de zanahoria con 3 gotas mágicas de esencia de amaretto.</p>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">$1.25 <small>+ gelatto</small></span>
+                        <a href="#pago" class="btn-buy" onclick="seleccionarProducto('Sol de Liceo', '$1.25 + gelatto')">Comprar</a>
+                    </div>
+                </div>
+            </article>
+
+
+            <article class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://www.iletaitunfruit.fr/wp-content/uploads/2024/05/Melange-secret-pour-un-Cocktail-sans-alcool-a-la-noix-de-coco-qui-va-revolutionner-vos-soirees--1024x578.png" alt="Nieve de Trópico">
+                </div>
+                <div class="product-info">
+                    <div>
+                        <h3 class="product-title">Nieve de Trópico</h3>
+                        <p class="product-desc">Exótico coctel de jugo de coco natural con trozos generosos de guanábana fresca y 3 gotas de esencia de coco.</p>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">$1.25 <small>+ gelatto</small></span>
+                        <a href="#pago" class="btn-buy" onclick="seleccionarProducto('Nieve de Trópico', '$1.25 + gelatto')">Comprar</a>
+                    </div>
+                </div>
+            </article>
+
+
+            <article class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://img.freepik.com/fotos-premium/coctel-pina-colada-refrescante-coctel-alcoholico-verano-pina-colada-leche-coco-jugo-pina-bebida-verano-preparacion-cocteles_262193-1267.jpg?w=2000" alt="Piso Seis">
+                </div>
+                <div class="product-info">
+                    <div>
+                        <h3 class="product-title">Piso Seis</h3>
+                        <p class="product-desc">Combinación perfecta de trozos grandes de piña selecta con base de jugo de coco y 3 gotas intensas de esencia de coco.</p>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">$1.25 <small>+ gelatto</small></span>
+                        <a href="#pago" class="btn-buy" onclick="seleccionarProducto('Piso Seis', '$1.25 + gelatto')">Comprar</a>
+                    </div>
+                </div>
+            </article>
+            </main>
+    </div>
+
+    <section id="pago" class="checkout-section">
+        <div class="checkout-container">
+            <h2>Finaliza tu Pedido</h2>
+            
+            <div id="alerta-producto" class="selection-alert">
+                Selecciona un producto del menú para calcular tu cuenta.
+            </div>
+
+            <div class="bank-details">
+                <p><strong>Banco:</strong> Banco Pichincha (Cuenta de Ahorros)</p>
+                <p><strong>Número de Cuenta:</strong> 2204567891</p>
+                <p><strong>Beneficiario:</strong> Frutalia Cocteles S.A.</p>
+            </div>
+
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TransferenciaFrutalia2204567891" alt="Código QR de una">
+            </div>
+
+            <p class="checkout-note">Escanea el código QR desde tu app Deuna o realiza la transferencia bancaria. Envía tu comprobante de pago para procesar el pedido.</p>
+        </div>
+    </section>
+
+    <script>
+        function seleccionarProducto(nombre, precio) {
+            // Encuentra la caja de texto en la sección de pagos
+            const alerta = document.getElementById('alerta-producto');
+            // Cambia el contenido dinámicamente según lo presionado
+            alerta.innerHTML = `Has seleccionado: <strong>${nombre}</strong> <br> Total a transferir: <strong>${precio}</strong>`;
+            
+            // Animación flash para avisar visualmente al cliente del cambio
+            alerta.style.background = "rgba(168, 85, 247, 0.3)";
+            setTimeout(() => {
+                alerta.style.background = "rgba(245, 158, 11, 0.15)";
+            }, 500);
+        }
+    </script>
+</body>
+</html>
